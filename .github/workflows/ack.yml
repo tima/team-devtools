@@ -1,3 +1,4 @@
+# cspell:ignore ANSIBUDDY
 # ack workflow runs on any change made to a pull-request and aims to verify
 # that is following our practices. Initial version is checking correct label
 # presence.
@@ -9,14 +10,13 @@ on:
     types: [opened, labeled, unlabeled, synchronize]
   workflow_call: # allows reuse of this workflow from other devtools repos
     secrets:
-      BOT_PAT:
+      ANSIBUDDY_BOT_PAT:
         required: false
 jobs:
   ack:
     runs-on: ubuntu-latest
-    environment: ack
     env:
-      BOT_PAT: ${{ secrets.BOT_PAT }}
+      ANSIBUDDY_BOT_PAT: ${{ secrets.ANSIBUDDY_BOT_PAT }}
     permissions:
       checks: write
       contents: write # needed to update release
@@ -63,13 +63,13 @@ jobs:
 
       - name: Add issue or pull-request to 'devtools' project
         # Workaround for running this step only if BOT_PAT secret is found
-        if: env.BOT_PAT != null
+        if: env.ANSIBUDDY_BOT_PAT != null
         uses: actions/add-to-project@main
         with:
           project-url: https://github.com/orgs/ansible/projects/86
           # Do not use secrets.GITHUB_TOKEN here because it does not have
           # access to projects. Only personal access tokens (PAT) can be used.
-          github-token: ${{ secrets.BOT_PAT }}
+          github-token: ${{ secrets.ANSIBUDDY_BOT_PAT }}
           # labeled: skip-changelog
           # label-operator: NOT
 
@@ -80,15 +80,15 @@ jobs:
 
       # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#approve-a-pull-request
       - name: Enable auto-merge for safe bots PRs
-        if: env.BOT_PAT != null && contains(fromJson('["dependabot[bot]", "pre-commit-ci[bot]"]'), github.event.pull_request.user.login)
+        if: env.ANSIBUDDY_BOT_PAT != null && contains(fromJson('["dependabot[bot]", "pre-commit-ci[bot]"]'), github.event.pull_request.user.login)
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.BOT_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ANSIBUDDY_BOT_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Approve a PR
-        if: env.BOT_PAT != null && contains(fromJson('["dependabot[bot]", "pre-commit-ci[bot]"]'), github.event.pull_request.user.login)
+        if: env.ANSIBUDDY_BOT_PAT != null && contains(fromJson('["dependabot[bot]", "pre-commit-ci[bot]"]'), github.event.pull_request.user.login)
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{ secrets.BOT_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ANSIBUDDY_BOT_PAT || secrets.GITHUB_TOKEN }}
