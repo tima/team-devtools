@@ -1,43 +1,58 @@
+# TODO: allow layered loading from other repos like dependabot config
+# Symlink this as ~/pre.yml and use https://github.com/pycontribs/gh-pre
 # This file documents repositories that are nurtured by Ansible DevTools team.
 # Not all these repos are fully managed or maintained by the team.
 # We aim to use this file when performing maintenance and audit.
-#
-# Symlink this as ~/pre.yml and use https://github.com/pycontribs/gh-pre
 # to review open pull requests and issues.
+_version: 1
+_extends: gh-org/gh-repo
 repos:
-  # primary projects
-  - ansible/ansible-compat
-  - ansible/ansible-creator # scaffolding (templating) for new content
-  - ansible/ansible-dev-tools # former cdk/sdk, the devtools 'bundle', server
-  - ansible/ansible-development-environment # former pip4a (venv installer)
-  - ansible/ansible-lint
-  - ansible/ansible-navigator
-  - ansible/community-ansible-dev-tools-image
-  - ansible/creator-ee # deprecated in favour of community-ansible-dev-tools-image
-  - ansible/molecule
-  - ansible/pytest-ansible
-  - ansible/team-devtools
-  - ansible/tox-ansible
-  - ansible/vscode-ansible
-
-  # experimental / tech-preview
-  - ansible/ansible-backstage-plugins # private
-
-  # auxiliary (usually dependencies)
-  - ansible-collections/community.molecule
-  - ansible/ansible-workspace-env-reference-image # dev-spaces reference
-  - ansible/mkdocs-ansible
-  - ansible/team-devtools
-  - pycontribs/enrich
-  - pycontribs/subprocess-tee
-
-  # nurtured (helped on best effort basis)
-  - ansible-community/molecule-plugins
-
+  # repo key can be 'gh-org/gh-repo' or other simple, override url could be
+  # configured using 'repo:' key.
+  _default:
+    # special meaning, all other keys will inherit attributes this entry
+    group: primary
+  ansible-collections/community.molecule:
+    section: community
+  ansible-community/molecule-plugins:
+    section: community
+  ansible/ansible-backstage-plugins:
+    section: experimental
+  ansible/ansible-compat: {}
+  ansible/ansible-creator:
+    section: experimental
+  ansible/ansible-dev-environment:
+    section: experimental
+  ansible/ansible-dev-tools: {}
+  ansible/ansible-lint: {}
+  ansible/ansible-navigator: {}
+  ansible/ansible-workspace-env-reference-image:
+    section: community
+  ansible/community-ansible-dev-tools-image: {}
+  ansible/creator-ee:
+    section: deprecated
+  ansible/mkdocs-ansible:
+    section: community
+  ansible/molecule: {}
+  ansible/pytest-ansible:
+    section: experimental
+  ansible/team-devtools: {}
+  ansible/tox-ansible:
+    section: experimental
+  ansible/vscode-ansible: {}
+  pycontribs/enrich:
+    section: community
+  pycontribs/subprocess-tee:
+    section: community
+sections:
+  community: null
+  deprecated: null
+  experimental: null
+  primary: null
   # unmaintained, obsoleted or archived:
   # - ansible-community/protogen # deprecated?
   # - ansible-community/role2collection
   # - ansible/ansible-language-server (now part vscode-ansible)
   # - ansible/ansible-lint-action (now part of ansible-lint)
   # - pycontribs/selinux
-  # - pytest-molecule
+  # - pytest-molecule#
